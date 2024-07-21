@@ -1,7 +1,12 @@
+import os
 import numpy as np
 import tensorflow as tf
 from model import build_generator, build_discriminator, compile_pix2pix
 import matplotlib.pyplot as plt
+
+# Function to get the directory of the current script
+def get_script_dir():
+    return os.path.dirname(os.path.abspath(__file__))
 
 # Load dummy data
 def load_dummy_data():

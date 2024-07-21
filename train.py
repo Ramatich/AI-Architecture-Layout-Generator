@@ -19,7 +19,7 @@ discriminator = build_discriminator()
 generator, discriminator = compile_pix2pix(generator, discriminator)
 
 # Train the Pix2Pix model
-for epoch in range(10):
+for epoch in range(2):
     print(f'Starting epoch {epoch+1}')
     for input_image, target_image in zip(input_images, target_images):
         with tf.GradientTape() as gen_tape, tf.GradientTape() as disc_tape:
@@ -39,5 +39,8 @@ for epoch in range(10):
         discriminator.optimizer.apply_gradients(zip(gradients_of_discriminator, discriminator.trainable_variables))
     print(f'Finished epoch {epoch+1}')
 
-# Save the trained model
-generator.save('pix2pix_model.h5')
+# Save the trained model in the same directory as train.py
+script_dir = get_script_dir()
+model_save_path = os.path.join(script_dir, 'pix2pix_model.h5')
+generator.save(model_save_path)
+print(f"Model saved at {model_save_path}")

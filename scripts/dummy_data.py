@@ -1,23 +1,16 @@
-import numpy as np
-import matplotlib.pyplot as plt
-import os
+from tensorflow.keras.preprocessing.image import load_img, img_to_array
+import glob
 
-def create_dummy_data(num_samples, img_size=(256, 256, 3)):
-    inputs = np.random.rand(num_samples, *img_size).astype(np.float32)  # Random images for input
-    targets = np.random.rand(num_samples, *img_size).astype(np.float32)  # Random images for target
-    return inputs, targets
+def load_real_data(data_dir, img_size=(256, 256)):
+    image_paths = glob.glob(os.path.join(data_dir, '*.jpg'))  # Adjust the extension if necessary
+    images = []
+    for path in image_paths:
+        img = load_img(path, target_size=img_size)
+        img = img_to_array(img) / 255.0  # Normalize to [0, 1]
+        images.append(img)
+    return np.array(images)
 
-num_samples = 6
-input_images, target_images = create_dummy_data(num_samples)
-
-
-#Ensure the data directory exists
-
-os.makedirs('data', exist_ok=True)
-
-plt.imsave(f'data/motion.jpg', input_images[0])
-plt.imsave(f'data/skop1.jpg', target_images[0])
-plt.imsave(f'data/Skop.jpg', target_images[1])
-plt.imsave(f'data/skop2.jpg', target_images[2])
-plt.imsave(f'data/skop3.jpg', target_images[3])
-plt.imsave(f'data/skop4.jpg', target_images[4])
+# Load real data
+data_dir = os.path.join(get_script_dir(), 'data', 'dataset')
+input_images = load_real_data(data_dir)
+target_images = load_real_data(data_dir)  # Replace this with the appropriate target data loading

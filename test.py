@@ -58,7 +58,7 @@ def main():
     generator = load_model(model_path)
 
     # Load test images
-    test_dir = os.path.join(script_dir, '..', 'data', 'test_dataset')  # Update this path to your test dataset
+    test_dir = os.path.join(script_dir, '..', 'data', 'dataset')  # Update this path to your test dataset
     test_images = load_test_data(test_dir)
 
     # Generate images

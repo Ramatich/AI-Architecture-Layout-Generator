@@ -2,7 +2,8 @@ import os
 import numpy as np
 import tensorflow as tf
 from model import build_generator, build_discriminator, compile_pix2pix
-from scripts.load_data import load_dataset_data
+from scripts.load_data import load_dataset_data 
+
 import matplotlib.pyplot as plt
 
 # Function to get the directory of the current script
@@ -10,8 +11,9 @@ def get_script_dir():
     return os.path.dirname(os.path.abspath(__file__))
 
 # Load real data from the dataset
-data_dir = os.path.join(get_script_dir(), 'data', 'dataset')
+data_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'dataset')
 input_images, target_images = load_dataset_data(data_dir)
+
 
 # Create models
 generator = build_generator()

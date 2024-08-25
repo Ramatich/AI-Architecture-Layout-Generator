@@ -56,6 +56,10 @@ def main():
     # Load the trained generator model
     model_path = os.path.join(script_dir, 'pix2pix_model.h5')
     generator = load_model(model_path)
+    
+    model = load_model(model_path)
+    print("Model loaded successfully!")
+
 
     # Load test images
     test_dir = os.path.join(script_dir, '..', 'data', 'dataset')  

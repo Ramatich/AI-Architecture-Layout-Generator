@@ -13,6 +13,7 @@ def get_script_dir():
 def load_test_data(dataset_dir, img_size=(256, 256)):
     image_paths = glob.glob(os.path.join(dataset_dir, '*.png'))
     images = []
+    
     for path in image_paths:
         img = Image.open(path)
         if img.mode != 'RGB':
@@ -21,20 +22,32 @@ def load_test_data(dataset_dir, img_size=(256, 256)):
         img = np.array(img).astype(np.float32) / 255.0  # Normalize images to [0, 1]
         images.append(img)
     
+    if not images:
+        raise ValueError("No images were found in the dataset directory. Please check the path and ensure that the images are in the correct format.")
+
     return np.array(images)
 
 # Load the trained model
 def load_model(model_path):
-    return tf.keras.models.load_model(model_path)
+    try:
+        model = tf.keras.models.load_model(model_path)
+        print("Model loaded successfully!")
+        return model
+    except Exception as e:
+        raise ValueError(f"Failed to load model. Error: {e}")
 
 # Generate images using the generator model
 def generate_images(generator, test_images):
-    return generator.predict(test_images)
+    try:
+        return generator.predict(test_images)
+    except Exception as e:
+        raise ValueError(f"Error during image generation. Ensure the input data shape matches the model's expected input shape. Error: {e}")
 
 # Visualize original and generated images
 def plot_images(test_images, generated_images, num_images=5):
     plt.figure(figsize=(15, 15))
-    for i in range(num_images):
+    
+    for i in range(min(num_images, len(test_images))):
         # Original image
         plt.subplot(num_images, 2, 2*i+1)
         plt.imshow(test_images[i])
@@ -57,13 +70,10 @@ def main():
     model_path = os.path.join(script_dir, 'pix2pix_model.h5')
     generator = load_model(model_path)
     
-    model = load_model(model_path)
-    print("Model loaded successfully!")
-
-
     # Load test images
     test_dir = os.path.join(script_dir, '..', 'data', 'dataset')  
     test_images = load_test_data(test_dir)
+    print(f"Loaded {len(test_images)} images from {test_dir}")
 
     # Generate images
     generated_images = generate_images(generator, test_images)

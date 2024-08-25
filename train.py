@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 def get_script_dir():
     return os.path.dirname(os.path.abspath(__file__))
 
+os.path.dirname(os.path.abspath(__file__))
 # Load real data from the dataset
 data_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'dataset')
 input_images, target_images = load_dataset_data(data_dir)
@@ -21,7 +22,7 @@ discriminator = build_discriminator()
 generator, discriminator = compile_pix2pix(generator, discriminator)
 
 # Training parameters
-epochs = 14  # You can adjust the number of epochs as needed
+epochs = 1  # You can adjust the number of epochs as needed
 batch_size = 1  # You may need to adjust this based on memory constraints
 
 # Train the Pix2Pix model

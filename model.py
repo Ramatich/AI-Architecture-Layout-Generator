@@ -124,3 +124,24 @@ def compile_pix2pix(generator, discriminator):
     discriminator.compile(optimizer=disc_optimizer, loss=loss_object)
 
     return generator, discriminator
+
+
+# Simple Network for Demonstration Purposes
+def simple_network():
+    inputs = tf.keras.Input(shape=(1,))
+    outputs = tf.keras.layers.Dense(1, activation='linear')(inputs)
+    model = tf.keras.Model(inputs, outputs)
+    return model
+
+# Demonstration of the simple network
+if __name__ == "__main__":
+    simple_net = simple_network()
+    simple_net.summary()
+
+    # Example: Compile and train the simple network (not necessary but shows usage)
+    simple_net.compile(optimizer='adam', loss='mean_squared_error')
+    # Dummy data for training (for demonstration)
+    import numpy as np
+    x_train = np.array([[1], [2], [3], [4]], dtype=float)
+    y_train = np.array([[2], [4], [6], [8]], dtype=float)
+    simple_net.fit(x_train, y_train, epochs=2)

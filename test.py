@@ -9,7 +9,7 @@ import glob
 def get_script_dir():
     return os.path.dirname(os.path.abspath(__file__))
 
-dataset_dir = '/content/AI-Architecture-Layout-Generator/data/dataset'
+dataset_dir = os.path.join('/content/AI-Architecture-Layout-Generator', 'data', 'dataset')
 print(f"Looking for images in: {os.path.abspath(dataset_dir)}")
 
 def load_test_data(dataset_dir, img_size=(256, 256)):

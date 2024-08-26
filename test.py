@@ -14,7 +14,7 @@ print(f"Looking for images in: {os.path.abspath(dataset_dir)}")
 
 # Load images from the test dataset folder
 def load_test_data(dataset_dir, img_size=(256, 256)):
-    image_paths = glob.glob(os.path.join(dataset_dir, '*.png'))
+    image_paths = glob.glob(os.path.join(dataset_dir, '*.png')) + glob.glob(os.path.join(dataset_dir, '*.PNG'))
     print(f"Found images: {image_paths}")
     images = []
     if not image_paths:

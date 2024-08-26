@@ -9,6 +9,9 @@ import glob
 def get_script_dir():
     return os.path.dirname(os.path.abspath(__file__))
 
+dataset_dir = '/content/AI-Architecture-Layout-Generator/data/dataset'
+print(f"Looking for images in: {os.path.abspath(dataset_dir)}")
+
 # Load images from the test dataset folder
 def load_test_data(dataset_dir, img_size=(256, 256)):
     image_paths = glob.glob(os.path.join(dataset_dir, '*.png'))
@@ -17,6 +20,8 @@ def load_test_data(dataset_dir, img_size=(256, 256)):
     if not image_paths:
         print("No images found in the dataset directory.")
         return np.array(images)  # Return an empty array if no images are found
+    else:
+        print(f"Found images: {image_paths}")
     
     for path in image_paths:
         try:

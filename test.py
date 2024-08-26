@@ -12,19 +12,25 @@ def get_script_dir():
 dataset_dir = '/content/AI-Architecture-Layout-Generator/data/dataset'
 print(f"Looking for images in: {os.path.abspath(dataset_dir)}")
 
-# Load images from the test dataset folder
 def load_test_data(dataset_dir, img_size=(256, 256)):
+    # Ensure dataset_dir exists and is a directory
+    if not os.path.isdir(dataset_dir):
+        print(f"Error: {dataset_dir} is not a directory or does not exist.")
+        return np.array([])  # Return an empty array
+
+    # Collect image paths
     image_paths = glob.glob(os.path.join(dataset_dir, '*.png')) + glob.glob(os.path.join(dataset_dir, '*.PNG'))
     print(f"Found images: {image_paths}")
+
     images = []
+    
     if not image_paths:
         print("No images found in the dataset directory.")
         return np.array(images)  # Return an empty array if no images are found
-    else:
-        print(f"Found images: {image_paths}")
     
     for path in image_paths:
         try:
+            print(f"Loading image: {path}")
             img = Image.open(path)
             if img.mode != 'RGB':
                 img = img.convert('RGB')
@@ -33,8 +39,17 @@ def load_test_data(dataset_dir, img_size=(256, 256)):
             images.append(img)
         except Exception as e:
             print(f"Error loading image {path}: {e}")
-    
+
     return np.array(images)
+
+# Example usage
+dataset_dir = '/content/AI-Architecture-Layout-Generator/data/dataset'
+images = load_test_data(dataset_dir)
+
+if images.size > 0:
+    print(f"Number of images loaded: {len(images)}")
+else:
+    print("No images were loaded.")
 
 # Load the trained model
 def load_model(model_path):

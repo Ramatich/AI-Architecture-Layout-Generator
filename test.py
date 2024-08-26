@@ -98,7 +98,8 @@ def main():
         return
 
     # Load test images
-    test_dir = os.path.join(script_dir, '..', 'data', 'dataset')
+    test_dir = '/content/AI-Architecture-Layout-Generator/data/dataset'
+
     test_images = load_test_data(test_dir)
     
     if test_images.size == 0:

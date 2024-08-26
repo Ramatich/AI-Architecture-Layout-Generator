@@ -44,6 +44,7 @@ def load_test_data(dataset_dir, img_size=(256, 256)):
 
 # Example usage
 dataset_dir = '/content/AI-Architecture-Layout-Generator/data/dataset'
+print(f"Using dataset directory: {dataset_dir}")
 images = load_test_data(dataset_dir)
 
 if images.size > 0:

@@ -13,6 +13,9 @@ def load_dataset_data(input_dir, output_dir, img_size=(256, 256)):
     input_image_paths = sorted(glob.glob(os.path.join(input_dir, '*.[pP][nN][gG]')) + glob.glob(os.path.join(input_dir, '*.[jJ][pP][gG]')))
     output_image_paths = sorted(glob.glob(os.path.join(output_dir, '*.[pP][nN][gG]')) + glob.glob(os.path.join(output_dir, '*.[jJ][pP][gG]')))
 
+    print(f"Found {len(input_image_paths)} input images.")
+    print(f"Found {len(output_image_paths)} output images.")
+
     input_dict = {}
     
     # Organize inputs by their base names (without extension)
@@ -40,7 +43,13 @@ def load_dataset_data(input_dir, output_dir, img_size=(256, 256)):
                 inputs.append(input_array)
                 outputs.append(output_array)
 
-    return np.array(inputs), np.array(outputs)
+    inputs = np.array(inputs)
+    outputs = np.array(outputs)
+
+    if len(inputs) != len(outputs):
+        raise ValueError(f"The number of input images ({len(inputs)}) does not match the number of output images ({len(outputs)}).")
+    
+    return inputs, outputs
 
 # Paths to the input and output folders
 data_dir = os.path.join(get_script_dir(), '..', 'data', 'dataset')

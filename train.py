@@ -11,45 +11,44 @@ def get_script_dir():
 
 # Load input and output images from the dataset
 def load_dataset_data(input_dir, output_dir, target_size=(256, 256)):
-    input_images = sorted(glob(os.path.join(input_dir, '*.png')))
-    output_images = sorted(glob(os.path.join(output_dir, '*.png')))
-    
+    # List all input and output images
+    input_images = sorted(glob(os.path.join(input_dir, '*input.png')))
+    output_images = sorted(glob(os.path.join(output_dir, '*output.png')))
+
     print(f"Input images found: {input_images}")
     print(f"Output images found: {output_images}")
 
     input_dict = {}
-    
-    # Organize inputs by their base names (without extension)
+
+    # Organize inputs by their base names (without '_input' suffix)
     for img_path in input_images:
-        base_name = os.path.splitext(os.path.basename(img_path))[0]
-        if base_name not in input_dict:
-            input_dict[base_name] = []
-        img = Image.open(img_path).convert('RGB')
-        img = img.resize(target_size)  # Resize to target size
-        input_dict[base_name].append(np.array(img) / 127.5 - 1.0)
-    
-    inputs = []
-    outputs = []
+        base_name = os.path.basename(img_path).replace('_input.png', '')
+        input_dict[base_name] = img_path
+
+    inputs, outputs = [], []
 
     # Match each output with its corresponding inputs
     for img_path in output_images:
-        base_name = os.path.splitext(os.path.basename(img_path))[0]
+        base_name = os.path.basename(img_path).replace('output.png', '')
         if base_name in input_dict:
-            output_img = Image.open(img_path).convert('RGB')
-            output_img = output_img.resize(target_size)  # Resize to target size
-            output_array = np.array(output_img) / 127.5 - 1.0
-            
-            # Add each corresponding input and the output to the lists
-            for input_array in input_dict[base_name]:
-                inputs.append(input_array)
-                outputs.append(output_array)
-    
+            try:
+                input_img = Image.open(input_dict[base_name]).convert('RGB')
+                input_img = input_img.resize(target_size)
+                output_img = Image.open(img_path).convert('RGB')
+                output_img = output_img.resize(target_size)
+
+                inputs.append(np.array(input_img) / 127.5 - 1.0)
+                outputs.append(np.array(output_img) / 127.5 - 1.0)
+            except Exception as e:
+                print(f"Error processing {base_name}: {e}")
+
     inputs = np.array(inputs)
     outputs = np.array(outputs)
-    
+
     print(f"Loaded {len(inputs)} input images and {len(outputs)} output images.")
-    
+
     return inputs, outputs
+
 
 
 # Paths to the input and output folders

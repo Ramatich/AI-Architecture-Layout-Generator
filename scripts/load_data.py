@@ -47,7 +47,7 @@ def load_dataset_data(input_dir, output_dir, img_size=(256, 256)):
     outputs = np.array(outputs)
 
     if len(inputs) != len(outputs):
-        raise ValueError(f"The number of input images ({len(inputs)}) does not match the number of output images ({len(outputs)}).")
+        print(f"Warning: The number of input images ({len(inputs)}) does not match the number of output images ({len(outputs)}).")
     
     return inputs, outputs
 

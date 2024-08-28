@@ -14,26 +14,42 @@ def load_dataset_data(input_dir, output_dir, target_size=(256, 256)):
     input_images = sorted(glob(os.path.join(input_dir, '*.png')))
     output_images = sorted(glob(os.path.join(output_dir, '*.png')))
 
-    if len(input_images) != len(output_images):
-        raise ValueError("The number of input images does not match the number of output images.")
-
+    input_dict = {}
+    
+    # Organize inputs by their base names (without extension)
+    for img_path in input_images:
+        base_name = os.path.splitext(os.path.basename(img_path))[0]
+        if base_name not in input_dict:
+            input_dict[base_name] = []
+        img = Image.open(img_path).convert('RGB')
+        img = img.resize(target_size)  # Resize to target size
+        input_dict[base_name].append(np.array(img) / 127.5 - 1.0)
+    
     inputs = []
     outputs = []
 
-    for img_path in input_images:
-        img = Image.open(img_path).convert('RGB')
-        img = img.resize(target_size)  # Resize to target size
-        inputs.append(np.array(img) / 127.5 - 1.0)
-
+    # Match each output with its corresponding inputs
     for img_path in output_images:
-        img = Image.open(img_path).convert('RGB')
-        img = img.resize(target_size)  # Resize to target size
-        outputs.append(np.array(img) / 127.5 - 1.0)
-
-    return np.array(inputs), np.array(outputs)
+        base_name = os.path.splitext(os.path.basename(img_path))[0]
+        if base_name in input_dict:
+            output_img = Image.open(img_path).convert('RGB')
+            output_img = output_img.resize(target_size)  # Resize to target size
+            output_array = np.array(output_img) / 127.5 - 1.0
+            
+            # Add each corresponding input and the output to the lists
+            for input_array in input_dict[base_name]:
+                inputs.append(input_array)
+                outputs.append(output_array)
+    
+    inputs = np.array(inputs)
+    outputs = np.array(outputs)
+    
+    print(f"Loaded {len(inputs)} input images and {len(outputs)} output images.")
+    
+    return inputs, outputs
 
 # Paths to the input and output folders
-data_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'dataset')
+data_dir = os.path.join(get_script_dir(), 'data', 'dataset')
 input_dir = os.path.join(data_dir, 'input')
 output_dir = os.path.join(data_dir, 'output')
 

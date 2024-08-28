@@ -5,7 +5,7 @@ from model import build_generator
 
 # Load the trained generator model
 generator = build_generator()
-generator.load_weights('pix2pix_model_generator.h5')
+generator.load_weights('pix2pix_model.h5')
 
 def generate_layout(input_image):
     # Ensure input_image is preprocessed to shape (256, 256, 3)

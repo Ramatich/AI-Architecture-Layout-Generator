@@ -13,6 +13,9 @@ def get_script_dir():
 def load_dataset_data(input_dir, output_dir, target_size=(256, 256)):
     input_images = sorted(glob(os.path.join(input_dir, '*.png')))
     output_images = sorted(glob(os.path.join(output_dir, '*.png')))
+    
+    print(f"Input images found: {input_images}")
+    print(f"Output images found: {output_images}")
 
     input_dict = {}
     
@@ -47,6 +50,7 @@ def load_dataset_data(input_dir, output_dir, target_size=(256, 256)):
     print(f"Loaded {len(inputs)} input images and {len(outputs)} output images.")
     
     return inputs, outputs
+
 
 # Paths to the input and output folders
 data_dir = os.path.join(get_script_dir(), 'data', 'dataset')

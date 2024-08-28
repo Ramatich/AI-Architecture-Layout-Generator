@@ -12,44 +12,69 @@ def get_script_dir():
 dataset_dir = os.path.join('/content/AI-Architecture-Layout-Generator', 'data', 'dataset')
 print(f"Looking for images in: {os.path.abspath(dataset_dir)}")
 
-def load_test_data(dataset_dir, img_size=(256, 256)):
-    # Ensure dataset_dir exists and is a directory
-    if not os.path.isdir(dataset_dir):
-        print(f"Error: {dataset_dir} is not a directory or does not exist.")
-        return np.array([])  # Return an empty array
+def load_test_data(input_dir, output_dir, img_size=(256, 256)):
+    # Ensure input_dir and output_dir exist and are directories
+    if not os.path.isdir(input_dir) or not os.path.isdir(output_dir):
+        print(f"Error: One or both directories do not exist.")
+        return np.array([]), np.array([])  # Return empty arrays
 
     # Collect image paths
-    image_paths = glob.glob(os.path.join(dataset_dir, '*.png')) + glob.glob(os.path.join(dataset_dir, '*.PNG'))
-    print(f"Found images: {image_paths}")
+    input_image_paths = glob.glob(os.path.join(input_dir, '*.png')) + glob.glob(os.path.join(input_dir, '*.PNG'))
+    output_image_paths = glob.glob(os.path.join(output_dir, '*.png')) + glob.glob(os.path.join(output_dir, '*.PNG'))
+    
+    print(f"Found input images: {input_image_paths}")
+    print(f"Found output images: {output_image_paths}")
 
-    images = []
-    
-    if not image_paths:
-        print("No images found in the dataset directory.")
-        return np.array(images)  # Return an empty array if no images are found
-    
-    for path in image_paths:
+    if not input_image_paths or not output_image_paths:
+        print("No images found in one or both directories.")
+        return np.array([]), np.array([])
+
+    inputs = []
+    outputs = []
+
+    for path in input_image_paths:
         try:
-            print(f"Loading image: {path}")
+            print(f"Loading input image: {path}")
             img = Image.open(path)
             if img.mode != 'RGB':
                 img = img.convert('RGB')
             img = img.resize(img_size)
             img = np.array(img).astype(np.float32) / 127.5 - 1.0  # Normalize images to [-1, 1]
-            images.append(img)
+            inputs.append(img)
         except Exception as e:
-            print(f"Error loading image {path}: {e}")
+            print(f"Error loading input image {path}: {e}")
 
-    return np.array(images)
+    for path in output_image_paths:
+        try:
+            print(f"Loading output image: {path}")
+            img = Image.open(path)
+            if img.mode != 'RGB':
+                img = img.convert('RGB')
+            img = img.resize(img_size)
+            img = np.array(img).astype(np.float32) / 127.5 - 1.0  # Normalize images to [-1, 1]
+            outputs.append(img)
+        except Exception as e:
+            print(f"Error loading output image {path}: {e}")
+
+    return np.array(inputs), np.array(outputs)
 
 # Example usage
 print(f"Using dataset directory: {dataset_dir}")
-images = load_test_data(dataset_dir)
 
-if images.size > 0:
-    print(f"Number of images loaded: {len(images)}")
+input_dir = os.path.join(dataset_dir, 'input')
+output_dir = os.path.join(dataset_dir, 'output')
+
+test_images, target_images = load_test_data(input_dir, output_dir)
+
+if test_images.size > 0:
+    print(f"Number of input images loaded: {len(test_images)}")
 else:
-    print("No images were loaded.")
+    print("No input images were loaded.")
+
+if target_images.size > 0:
+    print(f"Number of output images loaded: {len(target_images)}")
+else:
+    print("No output images were loaded.")
 
 # Load the trained model
 def load_model(model_path):
@@ -98,15 +123,13 @@ def main():
         return
 
     # Load test images
-    test_dir = '/content/AI-Architecture-Layout-Generator/data/dataset'
-
-    test_images = load_test_data(test_dir)
+    test_images, target_images = load_test_data(input_dir, output_dir)
     
     if test_images.size == 0:
-        print(f"No images to process in {test_dir}. Exiting.")
+        print(f"No images to process in {input_dir}. Exiting.")
         return
 
-    print(f"Loaded {len(test_images)} images from {test_dir}")
+    print(f"Loaded {len(test_images)} input images from {input_dir}")
 
     # Generate images
     generated_images = generate_images(generator, test_images)

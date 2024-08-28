@@ -65,7 +65,7 @@ discriminator = build_discriminator()
 generator, discriminator = compile_pix2pix(generator, discriminator)
 
 # Training parameters
-epochs = 1  # You can adjust the number of epochs as needed
+epochs = 15 # You can adjust the number of epochs as needed
 batch_size = 1  # You may need to adjust this based on memory constraints
 
 # Train the Pix2Pix model

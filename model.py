@@ -36,7 +36,7 @@ def upsample(filters, size, apply_dropout=False):
     return result
 
 def build_generator():
-    inputs = layers.Input(shape=[256, 256, 3])
+    inputs = layers.Input(shape=[256, 256, 4])
 
     down_stack = [
         downsample(64, 4, apply_batchnorm=False),  # (bs, 128, 128, 64)
@@ -89,8 +89,8 @@ def build_generator():
 def build_discriminator():
     initializer = tf.random_normal_initializer(0., 0.02)
 
-    inp = layers.Input(shape=[256, 256, 3], name='input_image')
-    tar = layers.Input(shape=[256, 256, 3], name='target_image')
+    inp = layers.Input(shape=[256, 256, 4], name='input_image')
+    tar = layers.Input(shape=[256, 256, 4], name='target_image')
 
     x = layers.concatenate([inp, tar])  # (bs, 256, 256, channels*2)
 

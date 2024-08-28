@@ -12,15 +12,25 @@ def get_script_dir():
     return os.path.dirname(os.path.abspath(__file__))
 
 # Load input and output images from the dataset
-def load_dataset_data(input_dir, output_dir):
+def load_dataset_data(input_dir, output_dir, target_size=(256, 256)):
     input_images = sorted(glob(os.path.join(input_dir, '*.png')))
     output_images = sorted(glob(os.path.join(output_dir, '*.png')))
 
-    inputs = [np.array(Image.open(img).convert('RGB')) / 127.5 - 1.0 for img in input_images]
-    outputs = [np.array(Image.open(img).convert('RGB')) / 127.5 - 1.0 for img in output_images]
+    inputs = []
+    outputs = []
 
+    for img_path in input_images:
+        img = Image.open(img_path).convert('RGB')
+        img = img.resize(target_size)  # Resize to target size
+        inputs.append(np.array(img) / 127.5 - 1.0)
+
+    for img_path in output_images:
+        img = Image.open(img_path).convert('RGB')
+        img = img.resize(target_size)  # Resize to target size
+        outputs.append(np.array(img) / 127.5 - 1.0)
 
     return np.array(inputs), np.array(outputs)
+
 
 # Paths to the input and output folders
 data_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'dataset')

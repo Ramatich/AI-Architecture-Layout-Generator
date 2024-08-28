@@ -115,6 +115,10 @@ def main():
     # Get the directory of the current script
     script_dir = get_script_dir()
 
+    # Set input and output directories
+    input_dir = os.path.join(script_dir, 'data', 'dataset', 'input')
+    output_dir = os.path.join(script_dir, 'data', 'dataset', 'output')  # Initialize output_dir here
+    
     # Load the trained generator model
     model_path = os.path.join(script_dir, 'pix2pix_model.h5')
     generator = load_model(model_path)
@@ -139,9 +143,7 @@ def main():
         return
 
     # Save the original and generated images
-    output_dir = os.path.join(script_dir, 'generated_images')
+    output_dir = os.path.join(script_dir, 'generated_images')  # Reassign output_dir for saving images
     save_images(test_images, generated_images, output_dir)
     print(f"Images saved in {output_dir}")
 
-if __name__ == "__main__":
-    main()

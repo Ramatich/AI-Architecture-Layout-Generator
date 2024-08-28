@@ -2,10 +2,8 @@ import os
 import numpy as np
 import tensorflow as tf
 from model import build_generator, build_discriminator, compile_pix2pix
-from scripts.load_data import load_dataset_data
-import matplotlib.pyplot as plt
-from glob import glob
 from PIL import Image
+from glob import glob
 
 # Function to get the directory of the current script
 def get_script_dir():
@@ -15,6 +13,9 @@ def get_script_dir():
 def load_dataset_data(input_dir, output_dir, target_size=(256, 256)):
     input_images = sorted(glob(os.path.join(input_dir, '*.png')))
     output_images = sorted(glob(os.path.join(output_dir, '*.png')))
+
+    if len(input_images) != len(output_images):
+        raise ValueError("The number of input images does not match the number of output images.")
 
     inputs = []
     outputs = []
@@ -30,7 +31,6 @@ def load_dataset_data(input_dir, output_dir, target_size=(256, 256)):
         outputs.append(np.array(img) / 127.5 - 1.0)
 
     return np.array(inputs), np.array(outputs)
-
 
 # Paths to the input and output folders
 data_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'dataset')

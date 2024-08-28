@@ -11,7 +11,7 @@ generator.load_weights('pix2pix_model.h5')
 
 def preprocess_image(image_path):
     """Load and preprocess an image from the given path."""
-    image = Image.open(image_path).resize((256, 256))
+    image = Image.open(image_path).convert('RGB').resize((256, 256))  # Convert to RGB to ensure 3 channels
     image = np.array(image).astype(np.float32) / 255.0  # Normalize to [0, 1]
     return image
 

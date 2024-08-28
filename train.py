@@ -2,19 +2,33 @@ import os
 import numpy as np
 import tensorflow as tf
 from model import build_generator, build_discriminator, compile_pix2pix
-from scripts.load_data import load_dataset_data 
-
+from scripts.load_data import load_dataset_data
 import matplotlib.pyplot as plt
+from glob import glob
+from PIL import Image
 
 # Function to get the directory of the current script
 def get_script_dir():
     return os.path.dirname(os.path.abspath(__file__))
 
-os.path.dirname(os.path.abspath(__file__))
-# Load real data from the dataset
-data_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'dataset')
-input_images, target_images = load_dataset_data(data_dir)
+# Load input and output images from the dataset
+def load_dataset_data(input_dir, output_dir):
+    input_images = sorted(glob(os.path.join(input_dir, '*.png')))
+    output_images = sorted(glob(os.path.join(output_dir, '*.png')))
 
+    inputs = [np.array(Image.open(img).convert('RGB')) / 127.5 - 1.0 for img in input_images]
+    outputs = [np.array(Image.open(img).convert('RGB')) / 127.5 - 1.0 for img in output_images]
+
+
+    return np.array(inputs), np.array(outputs)
+
+# Paths to the input and output folders
+data_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'dataset')
+input_dir = os.path.join(data_dir, 'input')
+output_dir = os.path.join(data_dir, 'output')
+
+# Load data
+input_images, target_images = load_dataset_data(input_dir, output_dir)
 
 # Create models
 generator = build_generator()

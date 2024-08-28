@@ -35,7 +35,7 @@ def load_test_data(dataset_dir, img_size=(256, 256)):
             if img.mode != 'RGB':
                 img = img.convert('RGB')
             img = img.resize(img_size)
-            img = np.array(img).astype(np.float32) / 255.0  # Normalize images to [0, 1]
+            img = np.array(img).astype(np.float32) / 127.5 - 1.0  # Normalize images to [-1, 1]
             images.append(img)
         except Exception as e:
             print(f"Error loading image {path}: {e}")
@@ -76,13 +76,13 @@ def save_images(test_images, generated_images, output_dir):
 
     for i in range(num_images):
         try:
-            # Save original image
+            # Save original image (re-normalize to [0, 1])
             original_image_path = os.path.join(output_dir, f"original_image_{i+1}.png")
-            plt.imsave(original_image_path, np.clip(test_images[i], 0, 1))
+            plt.imsave(original_image_path, (test_images[i] + 1.0) / 2.0)
 
-            # Save generated image
+            # Save generated image (re-normalize to [0, 1])
             generated_image_path = os.path.join(output_dir, f"generated_image_{i+1}.png")
-            plt.imsave(generated_image_path, np.clip(generated_images[i], 0, 1))
+            plt.imsave(generated_image_path, (generated_images[i] + 1.0) / 2.0)
         except Exception as e:
             print(f"Error saving image {i+1}: {e}")
 

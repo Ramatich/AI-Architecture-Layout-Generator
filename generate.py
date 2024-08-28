@@ -42,6 +42,7 @@ def process_images(input_folder, output_folder):
             output_filename = os.path.join(output_folder, image_name.replace('.png', '_generated_layout.png'))
             save_and_display_image(generated_layout, output_filename)
 
+
 # Paths to input and output folders
 data_folder = 'data'
 dataset_folder = os.path.join(data_folder, 'dataset')

@@ -44,8 +44,9 @@ def process_images(input_folder, output_folder):
 
 # Paths to input and output folders
 data_folder = 'data'
-input_folder = os.path.join(data_folder, 'test_input')
-output_folder = os.path.join(data_folder, 'generated_layouts')
+dataset_folder = os.path.join(data_folder, 'dataset')
+input_folder = os.path.join(dataset_folder, 'test_input')
+output_folder = os.path.join(dataset_folder, 'generated_layouts')
 
 # Process images
 process_images(input_folder, output_folder)

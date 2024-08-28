@@ -9,8 +9,10 @@ def get_script_dir():
 
 # Load images from the dataset folder
 def load_dataset_data(dataset_dir, img_size=(256, 256)):
-    image_paths = glob.glob(os.path.join(dataset_dir, '*.png'))
+    # Collect image paths (including different formats if needed)
+    image_paths = glob.glob(os.path.join(dataset_dir, '*.[pP][nN][gG]')) + glob.glob(os.path.join(dataset_dir, '*.[jJ][pP][gG]'))
     images = []
+    
     for path in image_paths:
         img = Image.open(path)
         
@@ -19,7 +21,7 @@ def load_dataset_data(dataset_dir, img_size=(256, 256)):
             img = img.convert('RGB')
         
         img = img.resize(img_size)
-        img = np.array(img).astype(np.float32) / 255.0  # Normalize images to [0, 1]
+        img = np.array(img).astype(np.float32) / 127.5 - 1.0  # Normalize images to [-1, 1]
         images.append(img)
     
     return np.array(images), np.array(images)  # Using the same images as inputs and targets
@@ -27,3 +29,6 @@ def load_dataset_data(dataset_dir, img_size=(256, 256)):
 # Load real data
 data_dir = os.path.join(get_script_dir(), '..', 'data', 'dataset')
 input_images, target_images = load_dataset_data(data_dir)
+
+# Confirm data loading
+print(f"Loaded {len(input_images)} images as input/target pairs from {data_dir}")
